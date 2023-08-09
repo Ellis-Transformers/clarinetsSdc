@@ -1,0 +1,21 @@
+{
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  },
+  "compilerOptions": {
+    "allowJs": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "esModuleInterop": true,
+    "lib":["ESNext"],
+    "moduleResolution": "node",
+    "module": "ESNext",
+    "outDir": "dist",
+    "sourceMap": true,
+    "strict": true,
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}

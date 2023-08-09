@@ -1,0 +1,79 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+generator client {
+  provider        = "prisma-client-js"
+  output          = "./node_modules/.prisma/client"
+  emitSingleFile  = true
+}
+
+model photos {
+  id        Int      @id @default(autoincrement())
+  styleId Int
+  styles  styles   @relation(fields: [styleId], references: [id])
+  url   String
+  thumbnail_url   String
+
+  @@index([styleId])
+}
+
+
+
+model product {
+  id              Int        @id @default(autoincrement())
+  name            String
+  slogan          String
+  description     String
+  category        String
+  default_price   Decimal?  @db.Money
+  features    feature[]
+  styles    styles[]
+  related   related[]
+
+  
+}
+
+model related {
+  id          Int     @id @default(autoincrement())
+  product1    product @relation(fields: [current_product_id], references: [id])
+  current_product_id  Int
+  related_product_id  Int
+
+  @@index([current_product_id])
+
+}
+
+model feature {
+  id        Int      @id @default(autoincrement())  
+  product    product @relation(fields: [product_id], references: [id])
+  product_id      Int
+  feature     String
+  value String?  @db.Text
+
+  @@index([id])
+}
+
+model styles {
+  id        Int      @id @default(autoincrement())
+  product    product @relation(fields: [productId], references: [id])
+  productId      Int
+  name     String
+  sale_price    Decimal?  @db.Money
+  original_price    Decimal?  @db.Money
+  default_style     Boolean
+  photos  photos[]
+  sku   sku[]
+
+  @@index([productId])
+}
+
+model sku {
+  id        Int      @id @default(autoincrement())  
+  style    styles @relation(fields: [styleId], references: [id])
+  styleId      Int
+  size     String
+  quantity Int
+
+  @@index([styleId])
+}

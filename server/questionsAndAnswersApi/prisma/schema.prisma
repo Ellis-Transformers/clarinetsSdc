@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Questions {
+  id           Int       @id @unique @default(autoincrement())
+  product_id   Int
+  body         String
+  date_written BigInt
+  asker_name   String
+  asker_email  String
+  reported     Boolean   @default(false)
+  helpful      Int       @default(0)
+  Answers      Answers[]
+
+  @@index([helpful, product_id])
+}
+
+model Answers {
+  id             Int        @id @unique @default(autoincrement())
+  question_id    Int
+  body           String
+  date_written   BigInt
+  answerer_name  String
+  answerer_email String
+  reported       Boolean    @default(false)
+  helpful        Int        @default(0)
+  Photos         Photos[]
+  Questions      Questions? @relation(fields: [questionsId], references: [id])
+  questionsId    Int?
+
+  @@index([helpful, question_id])
+}
+
+model Photos {
+  id        Int      @id @unique @default(autoincrement())
+  answer_id Int
+  url       String
+  Answers   Answers? @relation(fields: [answer_id], references: [id])
+
+  @@index([answer_id])
+}
